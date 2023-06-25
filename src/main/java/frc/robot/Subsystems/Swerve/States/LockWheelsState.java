@@ -4,20 +4,21 @@
 
 package frc.robot.Subsystems.Swerve.States;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Subsystems.Swerve.SwerveDrive;
 import frc.team4272.globals.State;
-
-public class FieldCentricState extends State<SwerveDrive> {
-  /** Creates a new FieldCentricState. */
-  public FieldCentricState(SwerveDrive swerveDrive) {
+/**A state that locks the wheels of the swerve drive to force it to remain stationary */
+public class LockWheelsState extends State<SwerveDrive> {
+  /** Creates a new LockWheelsState. */
+  public LockWheelsState(SwerveDrive swerveDrive) {
     // Use addRequirements() here to declare subsystem dependencies.
     super(swerveDrive);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    requiredSubsystem.lock();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
