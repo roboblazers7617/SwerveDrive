@@ -5,13 +5,17 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.SwerveConstants;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+
+  private Timer disabledTimer = new Timer();
 
   @Override
   public void robotInit() {
@@ -24,10 +28,18 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    m_robotContainer.setDriveBaseBrake(true);
+    disabledTimer.restart();
+  }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    if(disabledTimer.hasElapsed(SwerveConstants.BRAKE_TIMER_DURATION)){
+      m_robotContainer.setDriveBaseBrake(false);
+      disabledTimer.stop();
+    }
+  }
 
   @Override
   public void disabledExit() {}
