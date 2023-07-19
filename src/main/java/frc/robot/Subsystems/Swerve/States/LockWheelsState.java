@@ -11,6 +11,7 @@ public class LockWheelsState extends State<SwerveDrive> {
   /** Creates a new LockWheelsState. */
   public LockWheelsState(SwerveDrive swerveDrive) {
     // Use addRequirements() here to declare subsystem dependencies.
+    //TODO: Does the call to super here addRequirements for the subsystem?
     super(swerveDrive);
   }
 
@@ -30,6 +31,7 @@ public class LockWheelsState extends State<SwerveDrive> {
 
   // Returns true when the command should end.
   @Override
+  //TODO: Doesn't this command need to end? 
   public boolean isFinished() {
     return false;
   }

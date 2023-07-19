@@ -22,6 +22,7 @@ public class SwerveTab extends ShuffleboardTabBase {
 
         NetworkTableInstance inst = NetworkTableInstance.getDefault();
 
+        //TODO: "swerveDrive" should be a constant in this class since used more than once
         NetworkTable networkTable = inst.getTable("Shuffleboard/swerveDrive");
 
         ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("swerveDrive");

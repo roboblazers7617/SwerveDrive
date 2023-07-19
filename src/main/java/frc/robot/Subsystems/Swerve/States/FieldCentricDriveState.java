@@ -40,6 +40,8 @@ public class FieldCentricDriveState extends State<SwerveDrive> {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
+    //TODO: Shouldn't the deadband limiting be done in RobotContainer?
     speeds = requiredSubsystem.getTargetSpeeds(MathUtils.deadband(vX.get(), DriverConstants.joystickDeadband),
     MathUtils.deadband(vY.get(), DriverConstants.joystickDeadband),
     MathUtils.deadband(vTheta.get(), DriverConstants.joystickDeadband));

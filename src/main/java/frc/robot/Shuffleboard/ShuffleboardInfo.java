@@ -34,6 +34,7 @@ public class ShuffleboardInfo extends SubsystemBase {
   public void addTabs(ArrayList<ShuffleboardTabBase> tabs) {
     this.tabs = tabs;
 
+    //TODO: This needs to be documented on what it is doing as it is not clear why this is being done
     for (int i = 0; i < tabs.size(); i ++){
       if(tabs.get(i).toString().contains("DriverStationTab")){
         ShuffleboardTabBase tabHolder = tabs.get(i);
@@ -45,7 +46,9 @@ public class ShuffleboardInfo extends SubsystemBase {
 
   @Override
   public void periodic() {
+
     // This method will be called once per scheduler run
+    //TODO: This needs to be documented on what this logic does as it is not clear
     tabs.get(0).update();
     if (topic.get()) {
       for (int i = 1; i < tabs.size(); i++) {

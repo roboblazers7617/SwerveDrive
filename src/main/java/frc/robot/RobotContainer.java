@@ -15,6 +15,10 @@ import frc.robot.Subsystems.Swerve.States.LockWheelsState;
 public class RobotContainer {
   private SwerveDrive swerveDrive;
   private CommandXboxController driverController;
+
+  //TODO: Nothing will be showing up on Shuffleboard as no one creates the ShuffleboardInfo class and adds the tabs. 
+  //TODO: Each tab needs to be added in the constructor of this class. See last year's code as an example
+
   public RobotContainer() {
     swerveDrive = new SwerveDrive();
     driverController = new CommandXboxController(DriverConstants.DRIVER_CONTROLLER_PORT);
@@ -34,6 +38,7 @@ public class RobotContainer {
     return Commands.print("No autonomous command configured");
   }
 
+  // TODO: Typo.. isBreaked should be isBraked
   public void setDriveBaseBrake(boolean isBreaked){
     swerveDrive.setMotorBrake(isBreaked);
   }

@@ -46,6 +46,8 @@ public class SwerveDrive extends SubsystemBase {
     }
 
   }
+
+  //TODO: All variable declarations should be before the constructor
   public SwerveAutoBuilder autoBuilder = null;
   @Override
   public void periodic() {
@@ -177,10 +179,14 @@ public class SwerveDrive extends SubsystemBase {
    * @param headingX X joystick which controls the angle of the robot.
    * @return {@link ChassisSpeeds} which can be sent to the Swerve Drive.
    */
+  //TODO: wouldn't it be more intuitive if thetaInput came in as a Rotation2D as the YAGSL example code?
   public ChassisSpeeds getTargetSpeeds(double xInput, double yInput, double thetaInput)
   {
     xInput = Math.pow(xInput, 3);
     yInput = Math.pow(yInput, 3);
+
+    //TODO: Why is the angle being squared? This will be inaccurate as to where it should be facing.
+    //TODO: This is different than YAGSL examnple code. Will this work the same?
     thetaInput = Math.pow(thetaInput, 3);
     return drivetrain.swerveController.getRawTargetSpeeds(xInput, yInput, thetaInput);
   }
@@ -257,6 +263,7 @@ PIDConstants translation, PIDConstants rotation, boolean useAllianceColor){
 //   )
   if (autoBuilder == null){
     
+    //TODO: "this" should be "drivetrain" I believe
       autoBuilder = new SwerveAutoBuilder(
       this::getPose,
       this::resetOdometry,

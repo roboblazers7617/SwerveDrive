@@ -21,11 +21,15 @@ import frc.robot.Subsystems.Swerve.SwerveDrive;
 /** Add your docs here. */
 public class auto {
   
-  
-  
-  
+  //TODO: Becuase no one should be creating an instance of this class, it would be good to add this as a safety
+  /*private Autos()
+  {
+    throw new UnsupportedOperationException("This is a utility class!");
+  }*/
   
   public static Command testPath(SwerveDrive swerveDrive) {
+    //TODO: You shouldn't be creating a SwerveDrive here but using the parameter passed in "swerveDrive"
+    //TODO: To make this more generic, you could pass in a second variable of type "String" that is the name of the path you want to follow
     SwerveDrive drive = new SwerveDrive(); // Create an instance of SwerveDrive
     Command path = drive.createPathPlannerCommand("path", Auton.constraint, Auton.eventMap, Auton.yAutoPID, Auton.angleAutoPID, false);
     return path;
