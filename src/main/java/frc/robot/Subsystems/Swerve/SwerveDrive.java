@@ -265,8 +265,8 @@ PIDConstants translation, PIDConstants rotation, boolean useAllianceColor){
     
     //TODO: "this" should be "drivetrain" I believe
       autoBuilder = new SwerveAutoBuilder(
-      this::getPose,
-      this::resetOdometry,
+      drivetrain::getPose,
+      drivetrain::resetOdometry,
       translation,
       rotation,
       this::setChassisSpeeds,
