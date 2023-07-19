@@ -258,8 +258,8 @@ PIDConstants translation, PIDConstants rotation, boolean useAllianceColor){
   if (autoBuilder == null){
     
       autoBuilder = new SwerveAutoBuilder(
-      this::getPose,
-      this::resetOdometry,
+      drivetrain::getPose,
+      drivetrain::resetOdometry,
       translation,
       rotation,
       this::setChassisSpeeds,
