@@ -180,6 +180,8 @@ public class SwerveDrive extends SubsystemBase {
    * @return {@link ChassisSpeeds} which can be sent to the Swerve Drive.
    */
   //TODO: wouldn't it be more intuitive if thetaInput came in as a Rotation2D as the YAGSL example code?
+  //TODO: This differs from the YAGSL example. Is there a reason you do it differently? Shouldn't this calculate how fast to turn the robot
+  //      based on the current heading and what the desired heading is?
   public ChassisSpeeds getTargetSpeeds(double xInput, double yInput, double thetaInput)
   {
     xInput = Math.pow(xInput, 3);

@@ -20,6 +20,7 @@ import frc.robot.Constants.SwerveConstants;
 /**This is a state for mannual control of the robot,
  * where one joystick controls the the field-relative translation and the other controls the absolute heading.
  */
+
 public class AbsoluteDriveState extends State<SwerveDrive> {
   /** Creates a new AbsoluteDriveState. */
   private final Supplier<Double> vX, vY, xHeading, yHeading;
@@ -50,6 +51,8 @@ public class AbsoluteDriveState extends State<SwerveDrive> {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    //TODO: Move the deadbanding to RobotContainer to keep logic in one place. Is duplicated in the other command for drive
+    //TODO: Any reason not to use MathUtil.applyDeadband so we aren't tied to 4272 code? Don't they do the same?
     speeds = requiredSubsystem.getTargetSpeeds(MathUtils.deadband(vX.get(), DriverConstants.joystickDeadband),
     MathUtils.deadband(vY.get(), DriverConstants.joystickDeadband),
     xHeading.get(), yHeading.get());

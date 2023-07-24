@@ -17,13 +17,15 @@ public class RobotContainer {
   private CommandXboxController driverController;
 
   //TODO: Nothing will be showing up on Shuffleboard as no one creates the ShuffleboardInfo class and adds the tabs. 
-  //TODO: Each tab needs to be added in the constructor of this class. See last year's code as an example
+  // Each tab needs to be added in the constructor of this class. See last year's code as an example
 
   public RobotContainer() {
     swerveDrive = new SwerveDrive();
     driverController = new CommandXboxController(DriverConstants.DRIVER_CONTROLLER_PORT);
     configureBindings();
 
+    //TODO: Shouldn't the default command be AbsoluteDriveState to allow the driver to control which way the robot faces rather than rate of turn? 
+    //TODO: Do you need to negate the LeftY so that pointing forwards goes away from driver station?
     swerveDrive.setDefaultCommand(new FieldCentricDriveState(swerveDrive,
      driverController::getLeftX,
       driverController::getLeftY,
@@ -32,6 +34,7 @@ public class RobotContainer {
 
   private void configureBindings() {
     driverController.a().onTrue(new LockWheelsState(swerveDrive));
+    //TODO: Can there be a button that when you hold it that it just makes the robot spin as it drives? For example, to spin off a robot playing defence?
   }
 
   public Command getAutonomousCommand() {
