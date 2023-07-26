@@ -49,7 +49,9 @@ public class SwerveDrive extends SubsystemBase {
 
   }
   //TODO: All variable declarations should be before the constructor
-  public SwerveAutoBuilder autoBuilder = null;
+
+  // public SwerveAutoBuilder autoBuilder = null; 
+  // ^^^^^^^ this was a duplicate that I didnt want to get rid of in case it was correct
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -261,13 +263,12 @@ PIDConstants translation, PIDConstants rotation, boolean useAllianceColor){
 //   )
   if (autoBuilder == null){
     
-    //TODO: "this" should be "drivetrain" I believe
       autoBuilder = new SwerveAutoBuilder(
       drivetrain::getPose,
       drivetrain::resetOdometry,
       translation,
       rotation,
-      this::setChassisSpeeds,
+      drivetrain::setChassisSpeeds,
       eventMap,
       useAllianceColor,
       this

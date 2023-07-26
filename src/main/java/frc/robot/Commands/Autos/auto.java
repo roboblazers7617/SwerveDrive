@@ -28,7 +28,6 @@ public class auto {
   }*/
   
   public static Command testPath(SwerveDrive swerveDrive, String pathname) {
-    //TODO: To make this more generic, you could pass in a second variable of type "String" that is the name of the path you want to follow
     SwerveDrive drive = swerveDrive; 
     Command path = drive.createPathPlannerCommand(pathname, Auton.constraint, Auton.eventMap, Auton.yAutoPID, Auton.angleAutoPID, false);
     return path;
