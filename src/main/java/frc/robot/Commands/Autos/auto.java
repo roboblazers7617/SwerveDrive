@@ -4,8 +4,8 @@
 
 package frc.robot.Commands.Autos;
 
-import java.util.List;
 
+import java.util.List;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -21,9 +21,8 @@ import frc.robot.Subsystems.Swerve.SwerveDrive;
 
 /** Add your docs here. */
 public class auto {
-  
-  //TODO: Becuase no one should be creating an instance of this class, it would be good to add this as a safety
-  /*private Autos()
+  //TODO: To avoid accidentally making an istance of this class, a private constructor like one below should probably be added:
+  /*private auto()
   {
     throw new UnsupportedOperationException("This is a utility class!");
   }*/

@@ -9,8 +9,8 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Subsystems.Swerve.SwerveDrive;
-import frc.team4272.globals.State;
 import swervelib.SwerveController;
 import swervelib.math.SwerveMath;
 import frc.team4272.globals.MathUtils;
@@ -18,15 +18,20 @@ import frc.robot.Constants;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.SwerveConstants;
 /**This is a manual control state,
- *  where one joystick controls the field-relative translation and another controls  */
-public class FieldCentricDriveState extends State<SwerveDrive> {
+ *  where one joystick controls the field-relative translation and another controls the rate of drivetrain rotation. 
+ * This is opposed to the absolute drive, where the command is passed an absolue heading of the robot for it to face.*/
+
+public class FieldCentricDriveState extends CommandBase {
   /** Creates a new FieldCentricState. */
+
+  private final SwerveDrive swerveDrive;
   private final Supplier<Double> vX, vY, vTheta;
   private ChassisSpeeds speeds;
   private Translation2d translation;
   public FieldCentricDriveState(SwerveDrive swerveDrive, Supplier<Double> vX, Supplier<Double> vY, Supplier<Double> vTheta) {
     // Use addRequirements() here to declare subsystem dependencies.
-    super(swerveDrive); 
+    addRequirements(swerveDrive); 
+    this.swerveDrive = swerveDrive;
     this.vX = vX;
     this.vY = vY;
     this.vTheta = vTheta;
@@ -41,18 +46,18 @@ public class FieldCentricDriveState extends State<SwerveDrive> {
   @Override
   public void execute() {
 
-    //TODO: Shouldn't the deadband limiting be done in RobotContainer?
-    speeds = requiredSubsystem.getTargetSpeeds(MathUtils.deadband(vX.get(), DriverConstants.joystickDeadband),
-    MathUtils.deadband(vY.get(), DriverConstants.joystickDeadband),
-    MathUtils.deadband(vTheta.get(), DriverConstants.joystickDeadband));
+    speeds = swerveDrive.getTargetSpeeds(
+    vX.get(),
+    vY.get(),
+    //This is in radians, we might need to add a speed conversion factor to turn faster if that is deemed nessecary
+    vTheta.get());
 
     translation = SwerveController.getTranslation2d(speeds);
 
-    translation = SwerveMath.limitVelocity(translation, requiredSubsystem.getFieldVelocity(), requiredSubsystem.getPose(), 
+    translation = SwerveMath.limitVelocity(translation, swerveDrive.getFieldVelocity(), swerveDrive.getPose(), 
     Constants.LOOP_TIME, Constants.ROBOT_MASS, List.of(SwerveConstants.DRIVEBASE), 
-    requiredSubsystem.getSwerveDriveConfiguration());
-    //TODO: do we want second order Kinematics?
-    requiredSubsystem.drive(translation, speeds.omegaRadiansPerSecond, true, false);
+    swerveDrive.getSwerveDriveConfiguration());
+    swerveDrive.drive(translation, speeds.omegaRadiansPerSecond, true, false);
     
   }
 
