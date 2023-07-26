@@ -5,6 +5,15 @@
 package frc.robot.Subsystems.Swerve;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -12,7 +21,10 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.Auton;
 import swervelib.SwerveController;
 import swervelib.math.SwerveKinematics2;
 import swervelib.parser.SwerveDriveConfiguration;
@@ -24,6 +36,8 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 public class SwerveDrive extends SubsystemBase {
   /** Creates a new SwerveDrive. */
   private swervelib.SwerveDrive drivetrain;
+  public SwerveAutoBuilder autoBuilder = null;
+
   public SwerveDrive() {
     try{
       SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
@@ -32,8 +46,10 @@ public class SwerveDrive extends SubsystemBase {
     catch(Exception e){
       throw new RuntimeException(e);
     }
-  }
 
+  }
+  //TODO: All variable declarations should be before the constructor
+  public SwerveAutoBuilder autoBuilder = null;
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -161,9 +177,10 @@ public class SwerveDrive extends SubsystemBase {
    *
    * @param xInput   X joystick input for the robot to move in the X direction.
    * @param yInput   Y joystick input for the robot to move in the Y direction.
-   * @param headingX X joystick which controls the angle of the robot.
+   * @param thetaInput X joystick which controls the rate of turning of the robot.
    * @return {@link ChassisSpeeds} which can be sent to the Swerve Drive.
    */
+  //      based on the current heading and what the desired heading is?
   public ChassisSpeeds getTargetSpeeds(double xInput, double yInput, double thetaInput)
   {
     xInput = Math.pow(xInput, 3);
@@ -229,5 +246,36 @@ public class SwerveDrive extends SubsystemBase {
   {
     return drivetrain.getPitch();
   }
+
+
+public Command createPathPlannerCommand(String path, PathConstraints constraints, Map<String, Command> eventMap,
+PIDConstants translation, PIDConstants rotation, boolean useAllianceColor){
+  List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(path, constraints);
+//    SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+//      Pose2d supplier,
+//      Pose2d consumer- used to reset odometry at the beginning of auto,
+//      PID constants to correct for translation error (used to create the X and Y PID controllers),
+//      PID constants to correct for rotation error (used to create the rotation controller),
+//      Module states consumer used to output to the drive subsystem,
+//      Should the path be automatically mirrored depending on alliance color. Optional- defaults to true
+//   )
+  if (autoBuilder == null){
+    
+    //TODO: "this" should be "drivetrain" I believe
+      autoBuilder = new SwerveAutoBuilder(
+      drivetrain::getPose,
+      drivetrain::resetOdometry,
+      translation,
+      rotation,
+      this::setChassisSpeeds,
+      eventMap,
+      useAllianceColor,
+      this
+);
+}
+
+return autoBuilder.fullAuto(pathGroup);
+}
+
 
 }
