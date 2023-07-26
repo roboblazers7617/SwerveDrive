@@ -3,7 +3,6 @@ package frc.robot.Shuffleboard;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Subsystems.Swerve.SwerveDrive;
@@ -22,12 +21,11 @@ public class SwerveTab extends ShuffleboardTabBase {
 
         NetworkTableInstance inst = NetworkTableInstance.getDefault();
 
-        //TODO: "swerveDrive" should be a constant in this class since used more than once
         NetworkTable networkTable = inst.getTable("Shuffleboard/swerveDrive");
 
         ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("swerveDrive");
 
-        shuffleboardTab.add(swerveDrive);
+        shuffleboardTab.add(this.swerveDrive);
 
         odometryXPub = networkTable.getDoubleTopic("X Odometry").publish();
 

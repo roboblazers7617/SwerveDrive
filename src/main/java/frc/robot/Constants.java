@@ -22,7 +22,7 @@ public class Constants {
     public static final double ROBOT_MASS = Units.lbsToKilograms(0); //TODO:Actual Mass
 
     public static class DriverConstants{
-        public static final double joystickDeadband = 0.1;
+        public static final double JOYSTICK_DEADBAND = 0.1;
         public static final int DRIVER_CONTROLLER_PORT = 0;
     }
 

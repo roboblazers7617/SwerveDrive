@@ -36,6 +36,8 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 public class SwerveDrive extends SubsystemBase {
   /** Creates a new SwerveDrive. */
   private swervelib.SwerveDrive drivetrain;
+  public SwerveAutoBuilder autoBuilder = null;
+
   public SwerveDrive() {
     try{
       SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
@@ -47,8 +49,6 @@ public class SwerveDrive extends SubsystemBase {
 
   }
 
-  //TODO: All variable declarations should be before the constructor
-  public SwerveAutoBuilder autoBuilder = null;
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -176,19 +176,14 @@ public class SwerveDrive extends SubsystemBase {
    *
    * @param xInput   X joystick input for the robot to move in the X direction.
    * @param yInput   Y joystick input for the robot to move in the Y direction.
-   * @param headingX X joystick which controls the angle of the robot.
+   * @param thetaInput X joystick which controls the rate of turning of the robot.
    * @return {@link ChassisSpeeds} which can be sent to the Swerve Drive.
    */
-  //TODO: wouldn't it be more intuitive if thetaInput came in as a Rotation2D as the YAGSL example code?
-  //TODO: This differs from the YAGSL example. Is there a reason you do it differently? Shouldn't this calculate how fast to turn the robot
   //      based on the current heading and what the desired heading is?
   public ChassisSpeeds getTargetSpeeds(double xInput, double yInput, double thetaInput)
   {
     xInput = Math.pow(xInput, 3);
     yInput = Math.pow(yInput, 3);
-
-    //TODO: Why is the angle being squared? This will be inaccurate as to where it should be facing.
-    //TODO: This is different than YAGSL examnple code. Will this work the same?
     thetaInput = Math.pow(thetaInput, 3);
     return drivetrain.swerveController.getRawTargetSpeeds(xInput, yInput, thetaInput);
   }
