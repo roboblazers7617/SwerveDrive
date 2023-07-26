@@ -46,7 +46,6 @@ public class SwerveDrive extends SubsystemBase {
     }
 
   }
-
   //TODO: All variable declarations should be before the constructor
   public SwerveAutoBuilder autoBuilder = null;
   @Override

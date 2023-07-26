@@ -15,6 +15,7 @@ import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.Auton;
 import frc.robot.Subsystems.Swerve.SwerveDrive;
 
@@ -27,11 +28,10 @@ public class auto {
     throw new UnsupportedOperationException("This is a utility class!");
   }*/
   
-  public static Command testPath(SwerveDrive swerveDrive) {
-    //TODO: You shouldn't be creating a SwerveDrive here but using the parameter passed in "swerveDrive"
+  public static Command testPath(SwerveDrive swerveDrive, String pathname) {
     //TODO: To make this more generic, you could pass in a second variable of type "String" that is the name of the path you want to follow
-    SwerveDrive drive = new SwerveDrive(); // Create an instance of SwerveDrive
-    Command path = drive.createPathPlannerCommand("path", Auton.constraint, Auton.eventMap, Auton.yAutoPID, Auton.angleAutoPID, false);
+    SwerveDrive drive = swerveDrive; 
+    Command path = drive.createPathPlannerCommand(pathname, Auton.constraint, Auton.eventMap, Auton.yAutoPID, Auton.angleAutoPID, false);
     return path;
 }
 }

@@ -15,6 +15,7 @@ import frc.robot.Subsystems.Swerve.States.LockWheelsState;
 public class RobotContainer {
   private SwerveDrive swerveDrive;
   private CommandXboxController driverController;
+  public String path;
 
   //TODO: Nothing will be showing up on Shuffleboard as no one creates the ShuffleboardInfo class and adds the tabs. 
   //TODO: Each tab needs to be added in the constructor of this class. See last year's code as an example
