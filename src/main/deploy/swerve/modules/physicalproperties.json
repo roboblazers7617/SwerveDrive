@@ -1,9 +1,9 @@
 {
   "wheelDiameter": 4,
-  "wheelGripCoefficientOfFriction": 0.9,
+  "wheelGripCoefficientOfFriction": 1.19,
   "gearRatio": {
     "drive": 6.75,
-    "angle": 12.81
+    "angle": 12.8
   },
   "currentLimit": {
     "drive": 40,

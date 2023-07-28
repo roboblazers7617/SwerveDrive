@@ -7,6 +7,7 @@ package frc.robot.Subsystems.Swerve.States;
 import java.util.List;
 import java.util.function.Supplier;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -52,7 +53,7 @@ public class FieldCentricDriveState extends CommandBase {
     //This is in radians, we might need to add a speed conversion factor to turn faster if that is deemed nessecary
     vTheta.get());
 
-    translation = SwerveController.getTranslation2d(speeds);
+    translation = SwerveController.getTranslation2d(speeds).rotateBy(Rotation2d.fromDegrees(-90));
 
     translation = SwerveMath.limitVelocity(translation, swerveDrive.getFieldVelocity(), swerveDrive.getPose(), 
     Constants.LOOP_TIME, Constants.ROBOT_MASS, List.of(SwerveConstants.DRIVEBASE), 

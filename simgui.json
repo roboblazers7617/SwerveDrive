@@ -1,0 +1,10 @@
+{
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/swerveDrive/SwerveDrive": "Subsystem",
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/Pigeon 2 [1]": "Gyro"
+    }
+  }
+}

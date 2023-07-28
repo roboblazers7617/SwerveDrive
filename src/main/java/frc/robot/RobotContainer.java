@@ -44,8 +44,8 @@ public class RobotContainer {
     //TODO: Do you need to negate the LeftY so that pointing forwards goes away from driver station?
     swerveDrive.setDefaultCommand(new FieldCentricDriveState(swerveDrive,
      () -> (MathUtils.deadband(driverController.getLeftX(), DriverConstants.JOYSTICK_DEADBAND)),
-      () -> (MathUtils.deadband(driverController.getLeftY(), DriverConstants.JOYSTICK_DEADBAND)),
-      () -> (MathUtils.deadband(driverController.getRightY(), DriverConstants.JOYSTICK_DEADBAND))));
+      () -> (-MathUtils.deadband(driverController.getLeftY(), DriverConstants.JOYSTICK_DEADBAND)),
+      () -> (MathUtils.deadband(driverController.getRightX(), DriverConstants.JOYSTICK_DEADBAND))));
 
     driverController.a().onTrue(Commands.either(new InstantCommand(() -> swerveDrive.getCurrentCommand().cancel()),
      new LockWheelsState(swerveDrive), () -> (swerveDrive.getCurrentCommand() instanceof LockWheelsState)));
@@ -53,13 +53,13 @@ public class RobotContainer {
      driverController.leftStick().onTrue(Commands.either(
       new InstantCommand(() -> swerveDrive.setDefaultCommand(new AbsoluteDriveState(swerveDrive, 
       () -> (MathUtils.deadband(driverController.getLeftX(), DriverConstants.JOYSTICK_DEADBAND)),
-      () -> (MathUtils.deadband(driverController.getLeftY(), DriverConstants.JOYSTICK_DEADBAND)),
+      () -> (-MathUtils.deadband(driverController.getLeftY(), DriverConstants.JOYSTICK_DEADBAND)),
       () -> (MathUtils.deadband(driverController.getRightX(), DriverConstants.JOYSTICK_DEADBAND)),
-      () -> (MathUtils.deadband(driverController.getRightY(), DriverConstants.JOYSTICK_DEADBAND))))),
+      () -> (-MathUtils.deadband(driverController.getRightY(), DriverConstants.JOYSTICK_DEADBAND))))),
      new InstantCommand(() -> swerveDrive.setDefaultCommand(new FieldCentricDriveState(swerveDrive,
      () -> (MathUtils.deadband(driverController.getLeftX(), DriverConstants.JOYSTICK_DEADBAND)),
       () -> (MathUtils.deadband(driverController.getLeftY(), DriverConstants.JOYSTICK_DEADBAND)),
-      () -> (MathUtils.deadband(driverController.getRightY(), DriverConstants.JOYSTICK_DEADBAND))))),
+      () -> (MathUtils.deadband(driverController.getRightX(), DriverConstants.JOYSTICK_DEADBAND))))),
        () -> (swerveDrive.getCurrentCommand() instanceof FieldCentricDriveState)));
   }
 
