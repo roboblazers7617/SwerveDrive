@@ -188,6 +188,7 @@ public class SwerveDrive extends SubsystemBase {
     xInput = Math.pow(xInput, 3);
     yInput = Math.pow(yInput, 3);
     thetaInput = Math.pow(thetaInput, 3);
+
     return drivetrain.swerveController.getRawTargetSpeeds(xInput, yInput, thetaInput);
   }
 

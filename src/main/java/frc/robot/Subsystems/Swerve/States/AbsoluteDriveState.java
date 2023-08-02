@@ -24,25 +24,25 @@ import frc.robot.Constants.SwerveConstants;
 public class AbsoluteDriveState extends CommandBase {
   /** Creates a new AbsoluteDriveState. */
   private final SwerveDrive swerveDrive;
-  private final Supplier<Double> vX, vY, xHeading, yHeading;
+  private final Supplier<Double> vX, vY, headingHorizontal, headingVertical;
   private ChassisSpeeds speeds;
   private Translation2d translation;
   /**
    * @param swerveDrive The swerve drive to control.
    * @param vX The field-relative X velocity.
    * @param vY The field-relative Y velocity.
-   * @param xHeading The X component of the cartisian representation of the angle to face.
-   * @param yHeading The Y component of the cartisian representation of the angle to face.
+   * @param headingHorizontal The X component of the cartisian representation of the angle to face.
+   * @param headingVertical The Y component of the cartisian representation of the angle to face.
    */
   public AbsoluteDriveState(SwerveDrive swerveDrive, Supplier<Double> vX, Supplier<Double> vY, 
-  Supplier<Double> xHeading, Supplier<Double> yHeading) {
+  Supplier<Double> headingHorizontal, Supplier<Double> headingVertical) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(swerveDrive);
     this.swerveDrive = swerveDrive;
     this.vX = vX;
     this.vY = vY;
-    this.xHeading = xHeading;
-    this.yHeading = yHeading;
+    this.headingHorizontal = headingHorizontal;
+    this.headingVertical = headingVertical;
   }
 
   // Called when the command is initially scheduled.
@@ -55,7 +55,7 @@ public class AbsoluteDriveState extends CommandBase {
   public void execute() {
     speeds = swerveDrive.getTargetSpeeds(vX.get(),
     vY.get(),
-    xHeading.get(), yHeading.get());
+    headingHorizontal.get(), headingVertical.get());
 
     translation = SwerveController.getTranslation2d(speeds);
 

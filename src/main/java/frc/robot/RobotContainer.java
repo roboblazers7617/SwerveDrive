@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Shuffleboard.ShuffleboardInfo;
@@ -25,13 +26,28 @@ public class RobotContainer {
   private CommandXboxController driverController;
   public String path;
 
+  private final FieldCentricDriveState fieldCentricDriveState;
+  private final AbsoluteDriveState absoluteDriveState;
+
   public RobotContainer() {
     swerveDrive = new SwerveDrive();
     driverController = new CommandXboxController(DriverConstants.DRIVER_CONTROLLER_PORT);
+
+    fieldCentricDriveState = new FieldCentricDriveState(swerveDrive,
+    () -> (-MathUtils.deadband(driverController.getLeftY(), DriverConstants.JOYSTICK_DEADBAND)),
+     () -> (-MathUtils.deadband(driverController.getLeftX(), DriverConstants.JOYSTICK_DEADBAND)),
+     () -> (-MathUtils.deadband(driverController.getRightX(), DriverConstants.JOYSTICK_DEADBAND)));
+
+     absoluteDriveState  = (new AbsoluteDriveState(swerveDrive, 
+     () -> (-MathUtils.deadband(driverController.getLeftY(), DriverConstants.JOYSTICK_DEADBAND)),
+     () -> (-MathUtils.deadband(driverController.getLeftX(), DriverConstants.JOYSTICK_DEADBAND)),
+     () -> (-MathUtils.deadband(driverController.getRightX(), DriverConstants.JOYSTICK_DEADBAND)),
+     () -> (-MathUtils.deadband(driverController.getRightY(), DriverConstants.JOYSTICK_DEADBAND))));
+
     configureBindings();
 
     ArrayList<ShuffleboardTabBase> tabs = new ArrayList<>();
-                // YOUR CODE HERE | | |
+                // YOUR CODE HERE |  |  |
                 //               \/ \/ \/
                 tabs.add(new SwerveTab(swerveDrive));
                 // STOP HERE OR DIE
@@ -42,25 +58,24 @@ public class RobotContainer {
 
   private void configureBindings() {
     //TODO: Do you need to negate the LeftY so that pointing forwards goes away from driver station?
-    swerveDrive.setDefaultCommand(new FieldCentricDriveState(swerveDrive,
-     () -> (MathUtils.deadband(driverController.getLeftX(), DriverConstants.JOYSTICK_DEADBAND)),
-      () -> (-MathUtils.deadband(driverController.getLeftY(), DriverConstants.JOYSTICK_DEADBAND)),
-      () -> (MathUtils.deadband(driverController.getRightX(), DriverConstants.JOYSTICK_DEADBAND))));
+    swerveDrive.setDefaultCommand(fieldCentricDriveState);
+
 
     driverController.a().onTrue(Commands.either(new InstantCommand(() -> swerveDrive.getCurrentCommand().cancel()),
      new LockWheelsState(swerveDrive), () -> (swerveDrive.getCurrentCommand() instanceof LockWheelsState)));
 
-     driverController.leftStick().onTrue(Commands.either(
-      new InstantCommand(() -> swerveDrive.setDefaultCommand(new AbsoluteDriveState(swerveDrive, 
-      () -> (MathUtils.deadband(driverController.getLeftX(), DriverConstants.JOYSTICK_DEADBAND)),
+     driverController.x().onTrue(Commands.runOnce(() -> swerveDrive.setDefaultCommand(absoluteDriveState), swerveDrive).andThen(new ScheduleCommand(absoluteDriveState)));/*Commands.either(
+      Commands.parallel(Commands.runOnce(() -> swerveDrive.setDefaultCommand(new AbsoluteDriveState(swerveDrive, 
       () -> (-MathUtils.deadband(driverController.getLeftY(), DriverConstants.JOYSTICK_DEADBAND)),
-      () -> (MathUtils.deadband(driverController.getRightX(), DriverConstants.JOYSTICK_DEADBAND)),
-      () -> (-MathUtils.deadband(driverController.getRightY(), DriverConstants.JOYSTICK_DEADBAND))))),
-     new InstantCommand(() -> swerveDrive.setDefaultCommand(new FieldCentricDriveState(swerveDrive,
-     () -> (MathUtils.deadband(driverController.getLeftX(), DriverConstants.JOYSTICK_DEADBAND)),
-      () -> (MathUtils.deadband(driverController.getLeftY(), DriverConstants.JOYSTICK_DEADBAND)),
-      () -> (MathUtils.deadband(driverController.getRightX(), DriverConstants.JOYSTICK_DEADBAND))))),
-       () -> (swerveDrive.getCurrentCommand() instanceof FieldCentricDriveState)));
+      () -> (-MathUtils.deadband(driverController.getLeftX(), DriverConstants.JOYSTICK_DEADBAND)),
+      () -> (-MathUtils.deadband(driverController.getRightY(), DriverConstants.JOYSTICK_DEADBAND)),
+      () -> (-MathUtils.deadband(driverController.getRightX(), DriverConstants.JOYSTICK_DEADBAND)))), swerveDrive),
+      Commands.print("Going into Absolute")), 
+     Commands.parallel(Commands.runOnce(() -> swerveDrive.setDefaultCommand(new FieldCentricDriveState(swerveDrive,
+     () -> -(MathUtils.deadband(driverController.getLeftY(), DriverConstants.JOYSTICK_DEADBAND)),
+      () -> (MathUtils.deadband(driverController.getLeftX(), DriverConstants.JOYSTICK_DEADBAND)),
+      () -> (MathUtils.deadband(driverController.getRightX(), DriverConstants.JOYSTICK_DEADBAND)))), swerveDrive),Commands.print("Going into field-sentric")),
+       () -> (swerveDrive.getCurrentCommand() instanceof FieldCentricDriveState)));*/
   }
 
   public Command getAutonomousCommand() {

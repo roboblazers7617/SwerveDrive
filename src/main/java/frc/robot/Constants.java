@@ -19,7 +19,7 @@ public class Constants {
     /**This is the time it takes for the PID to update in seconds, 20ms + 110ms sprk max velocity lag  */
     public static final double LOOP_TIME  = 0.13;
     /** The total mass of the robot, in kilograms. Includes Batteries and bumper weight */
-    public static final double ROBOT_MASS = Units.lbsToKilograms(0); //TODO:Actual Mass
+    public static final double ROBOT_MASS = Units.lbsToKilograms(85.3); //TODO:Actual Mass
 
     public static class DriverConstants{
         public static final double JOYSTICK_DEADBAND = 0.1;
@@ -28,7 +28,7 @@ public class Constants {
 
     public static class SwerveConstants{
         /**The total mass of the drivetrain, eboard, and associated components. Position reflects the aproximate center of mass, relative to the floor, in meters */
-        public static final Matter DRIVEBASE = new Matter(new Translation3d(0,0,0), ROBOT_MASS);//TODO: add actuall position
+        public static final Matter DRIVEBASE = new Matter(new Translation3d(0,0,Units.inchesToMeters(3.5)), ROBOT_MASS);//TODO: add actuall position
         /**Time to brake the chassis for after the robot is disabled, in seconds */
         public static final double BRAKE_TIMER_DURATION = 10;
     }
