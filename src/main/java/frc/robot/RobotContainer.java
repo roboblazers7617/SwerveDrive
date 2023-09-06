@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.util.ArrayList;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -61,25 +62,29 @@ public class RobotContainer {
     swerveDrive.setDefaultCommand(fieldCentricDriveState);
 
 
-    driverController.a().onTrue(Commands.either(new InstantCommand(() -> swerveDrive.getCurrentCommand().cancel()),
-     new LockWheelsState(swerveDrive), () -> (swerveDrive.getCurrentCommand() instanceof LockWheelsState)));
+    driverController.a().toggleOnTrue(new LockWheelsState(swerveDrive));
 
-     driverController.x().onTrue(Commands.runOnce(() -> swerveDrive.setDefaultCommand(absoluteDriveState), swerveDrive).andThen(new ScheduleCommand(absoluteDriveState)));/*Commands.either(
-      Commands.parallel(Commands.runOnce(() -> swerveDrive.setDefaultCommand(new AbsoluteDriveState(swerveDrive, 
-      () -> (-MathUtils.deadband(driverController.getLeftY(), DriverConstants.JOYSTICK_DEADBAND)),
-      () -> (-MathUtils.deadband(driverController.getLeftX(), DriverConstants.JOYSTICK_DEADBAND)),
-      () -> (-MathUtils.deadband(driverController.getRightY(), DriverConstants.JOYSTICK_DEADBAND)),
-      () -> (-MathUtils.deadband(driverController.getRightX(), DriverConstants.JOYSTICK_DEADBAND)))), swerveDrive),
-      Commands.print("Going into Absolute")), 
-     Commands.parallel(Commands.runOnce(() -> swerveDrive.setDefaultCommand(new FieldCentricDriveState(swerveDrive,
-     () -> -(MathUtils.deadband(driverController.getLeftY(), DriverConstants.JOYSTICK_DEADBAND)),
-      () -> (MathUtils.deadband(driverController.getLeftX(), DriverConstants.JOYSTICK_DEADBAND)),
-      () -> (MathUtils.deadband(driverController.getRightX(), DriverConstants.JOYSTICK_DEADBAND)))), swerveDrive),Commands.print("Going into field-sentric")),
-       () -> (swerveDrive.getCurrentCommand() instanceof FieldCentricDriveState)));*/
+     driverController.x().onTrue(
+     Commands.either(
+      Commands.parallel(Commands.runOnce(() -> swerveDrive.setDefaultCommand(absoluteDriveState))
+      .andThen(new ScheduleCommand(absoluteDriveState)),
+      Commands.print(swerveDrive.getDefaultCommand().getName())), 
+     Commands.parallel(Commands.runOnce(() -> swerveDrive.setDefaultCommand(fieldCentricDriveState), swerveDrive)
+     .andThen(new ScheduleCommand(fieldCentricDriveState)),
+     Commands.print(swerveDrive.getDefaultCommand().getName())),
+      this::isFieldCentric));
+      }
+  
+
+  public boolean isFieldCentric(){
+    return swerveDrive.getDefaultCommand() instanceof FieldCentricDriveState;
   }
-
-  public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+  
+      public Command getAutonomousCommand() {
+    //return Commands.print("No autonomous command configured");
+        return Commands.sequence(new InstantCommand(() -> swerveDrive.drive(new Translation2d(.5, 0), 0, false, false)),
+         Commands.waitSeconds(5),
+          new InstantCommand(() -> swerveDrive.drive(new Translation2d(0, 0), 0, false, false)));
   }
 
   public void setDriveBaseBrake(boolean isBraked){

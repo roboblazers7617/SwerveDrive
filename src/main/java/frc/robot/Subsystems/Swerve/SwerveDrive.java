@@ -19,6 +19,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -26,7 +27,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Auton;
 import swervelib.SwerveController;
-import swervelib.math.SwerveKinematics2;
 import swervelib.parser.SwerveDriveConfiguration;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
@@ -54,8 +54,7 @@ public class SwerveDrive extends SubsystemBase {
   // ^^^^^^^ this was a duplicate that I didnt want to get rid of in case it was correct
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    drivetrain.updateOdometry();
+    //Odometry updates is not run in periodic anymore, it automaticly runs in a Notifier by YAGSL
   }
   /**
    * The primary method for controlling the drivebase.  Takes a {@link Translation2d} and a rotation rate, and
@@ -77,11 +76,31 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   /**
+   * The primary method for controlling the drivebase.  Takes a {@link Translation2d} and a rotation rate, and
+   * calculates and commands module states accordingly.  Can use either open-loop or closed-loop velocity control for
+   * the wheel velocities.  Also has field- and robot-relative modes, which affect how the translation vector is used.
+   *
+   * @param translation   {@link Translation2d} that is the commanded linear velocity of the robot, in meters per
+   *                      second. In robot-relative mode, positive x is torwards the bow (front) and positive y is
+   *                      torwards port (left).  In field-relative mode, positive x is away from the alliance wall
+   *                      (field North) and positive y is torwards the left wall when looking through the driver station
+   *                      glass (field West).
+   * @param rotation      Robot angular rate, in radians per second. CCW positive.  Unaffected by field/robot
+   *                      relativity.
+   * @param fieldRelative Drive mode.  True for field-relative, false for robot-relative.
+   * @param isOpenLoop    Whether to use closed-loop velocity control.  Set to true to disable closed-loop.
+   * @param headingCorrection Whether to use code to maintain current heading. True to enable heading correction.
+   */
+  public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop, boolean headingCorrection){
+    drivetrain.drive(translation, rotation, fieldRelative, isOpenLoop, headingCorrection);
+  }
+
+  /**
    * Get the swerve drive kinematics object.
    *
    * @return {@link SwerveKinematics2} of the swerve drive.
    */
-  public SwerveKinematics2 getKinematics()
+  public SwerveDriveKinematics getKinematics()
   {
     return drivetrain.kinematics;
   }
@@ -185,9 +204,9 @@ public class SwerveDrive extends SubsystemBase {
   //      based on the current heading and what the desired heading is?
   public ChassisSpeeds getTargetSpeeds(double xInput, double yInput, double thetaInput)
   {
-    xInput = Math.pow(xInput, 3);
-    yInput = Math.pow(yInput, 3);
-    thetaInput = Math.pow(thetaInput, 3);
+    xInput = Math.pow(xInput, 3) * drivetrain.swerveController.config.maxSpeed;
+    yInput = Math.pow(yInput, 3) * drivetrain.swerveController.config.maxSpeed;
+    thetaInput = Math.pow(thetaInput, 3) * drivetrain.swerveController.config.maxAngularVelocity;
 
     return drivetrain.swerveController.getRawTargetSpeeds(xInput, yInput, thetaInput);
   }

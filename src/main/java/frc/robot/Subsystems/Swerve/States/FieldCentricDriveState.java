@@ -51,22 +51,26 @@ public class FieldCentricDriveState extends CommandBase {
   @Override
   public void execute() { 
     speeds = swerveDrive.getTargetSpeeds(
-    vX.get() * controller.config.maxSpeed*.5,
-    vY.get() * controller.config.maxSpeed*.5,
-    //This is in radians, we might need to add a speed conversion factor to turn faster if that is deemed nessecary
-    vTheta.get()* controller.config.maxAngularVelocity*.3);
+    vX.get(),
+    vY.get(),
+    vTheta.get());
 
     translation = SwerveController.getTranslation2d(speeds);
 
     translation = SwerveMath.limitVelocity(translation, swerveDrive.getFieldVelocity(), swerveDrive.getPose(), 
     Constants.LOOP_TIME, Constants.ROBOT_MASS, List.of(SwerveConstants.DRIVEBASE), 
     swerveDrive.getSwerveDriveConfiguration());
-    swerveDrive.drive(translation, speeds.omegaRadiansPerSecond, true, false);
+
+    swerveDrive.drive(translation, speeds.omegaRadiansPerSecond, true, false, false);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    //Field relative is false since it frame of refrence is irrelevant tonot moving and... 
+    //it will run less code if code to make it field centric is not run
+    swerveDrive.drive(new Translation2d(), 0, false, true);
+  }
 
   // Returns true when the command should end.
   @Override
