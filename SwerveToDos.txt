@@ -1,13 +1,13 @@
-1. Test odometry to ensure that distances are measured properly
-2. Ensure Gyro measures angles properly, and doesn't drift that much, and mathces odometry\
+1. Test odometry to ensure that distances are measured properly(DONE)
+2. Ensure Gyro measures angles properly, and doesn't drift that much, and mathces odometry
 3. Make driving smoother. Maybe slew-rate limiter?
     a. For fieldCentricDrive
     b. For AbsoluteDrive
 4. Get a better set up shuffleboard debuging stuff
-5. Create a shuffleboard driver tab
-6. Ensure robot moves smoothly along diagonals
-7. Ensure robot can translate and rotate simultainiously
+5. Create a shuffleboard driver tab(DONE)
+6. Ensure robot moves smoothly along diagonals(DONE)
+7. Ensure robot can translate and rotate simultainiously(DONE)
 8. Test Pathplanner
 9. Comment and document code well
-10. Fix heading correction snapback in fieldCentricDrive
-11. Is it bad that our angle motor PID is different from the JSON example
+10. Fix heading correction snapback in fieldCentricDrive(DONE)
+12. Ensure modules all have bevel gears facing the same way(DONE)
