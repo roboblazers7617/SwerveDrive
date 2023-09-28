@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.DriverConstants;
+import frc.robot.Shuffleboard.DriverStationTab;
 import frc.robot.Shuffleboard.ShuffleboardInfo;
 import frc.robot.Shuffleboard.ShuffleboardTabBase;
 import frc.robot.Shuffleboard.SwerveTab;
@@ -51,6 +52,7 @@ public class RobotContainer {
                 // YOUR CODE HERE |  |  |
                 //               \/ \/ \/
                 tabs.add(new SwerveTab(swerveDrive));
+                tabs.add(new DriverStationTab(swerveDrive));
                 // STOP HERE OR DIE
                 ShuffleboardInfo shuffleboardInfo = ShuffleboardInfo.getInstance();
                 shuffleboardInfo.addTabs(tabs);
