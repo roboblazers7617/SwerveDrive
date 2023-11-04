@@ -172,3 +172,7 @@ out/
 *-window.json
 #To make maverick Lib work
 !libs/*.jar
+
+#discard logs
+*.wpilog
+*.csv

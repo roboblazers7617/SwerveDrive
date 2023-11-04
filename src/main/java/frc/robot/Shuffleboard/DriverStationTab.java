@@ -6,6 +6,8 @@ package frc.robot.Shuffleboard;
 
 import java.util.HashMap;
 
+import edu.wpi.first.util.datalog.StringLogEntry;
+import edu.wpi.first.wpilibj.DataLogManager;
 import frc.robot.Subsystems.Swerve.SwerveDrive;
 import shuffleboardlib.Question;
 import shuffleboardlib.Questionnaire;
@@ -14,11 +16,12 @@ import shuffleboardlib.Questionnaire;
 public class DriverStationTab extends ShuffleboardTabBase {
     private final SwerveDrive swerveDrive;
     private Questionnaire questionnaire;
+    private final StringLogEntry logger;
 
 
     public DriverStationTab(SwerveDrive swerveDrive){
         this.swerveDrive = swerveDrive;
-
+        
         HashMap<String, Question> leftPieceNumber = new HashMap<>();
         leftPieceNumber.put("1", new Question("1 piece", null, true, "leftOne"));
         leftPieceNumber.put("2", new Question("2 piece", null, true, "leftTwo"));
@@ -37,10 +40,12 @@ public class DriverStationTab extends ShuffleboardTabBase {
 
         questionnaire = new Questionnaire("Driver Station", rootQuestion, 5);
 
-
+        //create data logger
+        logger = new StringLogEntry(DataLogManager.getLog(), "/auto");
     }
 
     @Override
     public void update() {
+        logger.append(questionnaire.getOutput());
     }
 }
