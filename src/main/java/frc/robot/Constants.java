@@ -6,6 +6,7 @@ import java.util.Map;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.auto.PIDConstants;
 
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -48,5 +49,11 @@ public class Constants {
             eventMap.put("marker1", new PrintCommand("Passed marker 1"));
         }
     };
+    }
+
+
+    public static class VisionConstants{
+        public static final String PhotonCameraName = "FunnyCamera";
+        public static final Transform3d CAMERA_POSITION = null;
     }
 }
