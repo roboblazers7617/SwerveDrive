@@ -58,4 +58,11 @@ public class Vision extends SubsystemBase {
     //poseEstimator.setLastPose(prevEstimatedRobotPose);
     return poseEstimator.update();
   }
+  public double angleToTag(){
+    if (bestTag != null)
+      return bestTag.getYaw();
+    else
+      return 0;
+  }
+
 }
