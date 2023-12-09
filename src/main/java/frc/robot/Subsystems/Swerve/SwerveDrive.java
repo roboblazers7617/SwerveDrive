@@ -21,6 +21,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.util.datalog.StringLogEntry;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -37,8 +39,10 @@ public class SwerveDrive extends SubsystemBase {
   /** Creates a new SwerveDrive. */
   private swervelib.SwerveDrive drivetrain;
   public SwerveAutoBuilder autoBuilder = null;
+  private final StringLogEntry logger;
 
   public SwerveDrive() {
+    logger = new StringLogEntry(DataLogManager.getLog(), "/swerve-drive");
     try{
       SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
       drivetrain = new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve")).createSwerveDrive();
@@ -93,6 +97,7 @@ public class SwerveDrive extends SubsystemBase {
    */
   public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop, boolean headingCorrection){
     drivetrain.drive(translation, rotation, fieldRelative, isOpenLoop, headingCorrection);
+    logger.append("Translation: " + translation.toString() + ". Rotation: " + rotation + ". Field Relative: " + fieldRelative + ". Heading Correction: " + headingCorrection);
   }
 
   /**

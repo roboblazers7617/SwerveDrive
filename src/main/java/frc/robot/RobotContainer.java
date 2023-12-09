@@ -7,6 +7,9 @@ package frc.robot;
 import java.util.ArrayList;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.util.datalog.StringLogEntry;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -57,6 +60,11 @@ public class RobotContainer {
                 ShuffleboardInfo shuffleboardInfo = ShuffleboardInfo.getInstance();
                 shuffleboardInfo.addTabs(tabs);
 
+    DataLogManager.start();
+    DriverStation.startDataLog(DataLogManager.getLog());
+    //StringLogEntry stringLog = new StringLogEntry(DataLogManager.getLog(), "/");
+    //stringLog.append("testing");
+    //stringLog.finish();
   }
 
   private void configureBindings() {
