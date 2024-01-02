@@ -21,13 +21,15 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.util.datalog.StringLogEntry;
-import edu.wpi.first.wpilibj.DataLogManager;
+//import edu.wpi.first.util.datalog.StringLogEntry;
+//import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Auton;
+import frc.robot.Constants.SwerveConstants;
 import swervelib.SwerveController;
 import swervelib.parser.SwerveDriveConfiguration;
 import swervelib.parser.SwerveParser;
@@ -39,13 +41,13 @@ public class SwerveDrive extends SubsystemBase {
   /** Creates a new SwerveDrive. */
   private swervelib.SwerveDrive drivetrain;
   public SwerveAutoBuilder autoBuilder = null;
-  private final StringLogEntry logger;
+  //private final StringLogEntry logger;
 
   public SwerveDrive() {
-    logger = new StringLogEntry(DataLogManager.getLog(), "/swerve-drive");
+    //logger = new StringLogEntry(DataLogManager.getLog(), "/swerve-drive");
     try{
       SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
-      drivetrain = new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve")).createSwerveDrive();
+      drivetrain = new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve")).createSwerveDrive(SwerveConstants.MAX_SPEED);
     }
     catch(Exception e){
       throw new RuntimeException(e);
@@ -59,6 +61,9 @@ public class SwerveDrive extends SubsystemBase {
   @Override
   public void periodic() {
     //Odometry updates is not run in periodic anymore, it automaticly runs in a Notifier by YAGSL
+
+    SmartDashboard.putNumber("X coordinate", getPose().getX());
+    SmartDashboard.putNumber("Y coordinate", getPose().getY());
   }
   /**
    * The primary method for controlling the drivebase.  Takes a {@link Translation2d} and a rotation rate, and
@@ -96,8 +101,10 @@ public class SwerveDrive extends SubsystemBase {
    * @param headingCorrection Whether to use code to maintain current heading. True to enable heading correction.
    */
   public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop, boolean headingCorrection){
-    drivetrain.drive(translation, rotation, fieldRelative, isOpenLoop, headingCorrection);
-    logger.append("Translation: " + translation.toString() + ". Rotation: " + rotation + ". Field Relative: " + fieldRelative + ". Heading Correction: " + headingCorrection);
+    drivetrain.setHeadingCorrection(headingCorrection);
+    drivetrain.drive(translation, rotation, fieldRelative, isOpenLoop);
+    drivetrain.setHeadingCorrection(false);
+    //logger.append("Translation: " + translation.toString() + ". Rotation: " + rotation + ". Field Relative: " + fieldRelative + ". Heading Correction: " + headingCorrection);
   }
 
   /**
@@ -209,8 +216,8 @@ public class SwerveDrive extends SubsystemBase {
   //      based on the current heading and what the desired heading is?
   public ChassisSpeeds getTargetSpeeds(double xInput, double yInput, double thetaInput)
   {
-    xInput = Math.pow(xInput, 3) * drivetrain.swerveController.config.maxSpeed;
-    yInput = Math.pow(yInput, 3) * drivetrain.swerveController.config.maxSpeed;
+    xInput = Math.pow(xInput, 3) * SwerveConstants.MAX_SPEED;
+    yInput = Math.pow(yInput, 3) * SwerveConstants.MAX_SPEED;
     thetaInput = Math.pow(thetaInput, 3) * drivetrain.swerveController.config.maxAngularVelocity;
 
     return drivetrain.swerveController.getRawTargetSpeeds(xInput, yInput, thetaInput);

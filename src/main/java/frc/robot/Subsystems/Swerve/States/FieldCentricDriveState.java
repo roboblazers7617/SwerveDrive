@@ -67,9 +67,7 @@ public class FieldCentricDriveState extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    //Field relative is false since it frame of refrence is irrelevant tonot moving and... 
-    //it will run less code if code to make it field centric is not run
-    swerveDrive.drive(new Translation2d(), 0, false, true);
+  
   }
 
   // Returns true when the command should end.

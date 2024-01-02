@@ -31,6 +31,8 @@ public class Constants {
         public static final Matter DRIVEBASE = new Matter(new Translation3d(0,0,Units.inchesToMeters(3.5)), ROBOT_MASS);
         /**Time to brake the chassis for after the robot is disabled, in seconds */
         public static final double BRAKE_TIMER_DURATION = 10;
+        public static final double MAX_SPEED = 1;
+        public static final double DRIVER_MAX_SPEED = 0.50;
     }
     public static final class Auton
     {

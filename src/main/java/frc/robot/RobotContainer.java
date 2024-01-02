@@ -16,10 +16,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.DriverConstants;
-import frc.robot.Shuffleboard.DriverStationTab;
-import frc.robot.Shuffleboard.ShuffleboardInfo;
-import frc.robot.Shuffleboard.ShuffleboardTabBase;
-import frc.robot.Shuffleboard.SwerveTab;
+import frc.robot.Constants.SwerveConstants;
+//import frc.robot.Shuffleboard.DriverStationTab;
+//import frc.robot.Shuffleboard.ShuffleboardInfo;
+//import frc.robot.Shuffleboard.ShuffleboardTabBase;
+//import frc.robot.Shuffleboard.SwerveTab;
 import frc.robot.Subsystems.Swerve.SwerveDrive;
 import frc.robot.Subsystems.Swerve.States.AbsoluteDriveState;
 import frc.robot.Subsystems.Swerve.States.FieldCentricDriveState;
@@ -39,26 +40,26 @@ public class RobotContainer {
     driverController = new CommandXboxController(DriverConstants.DRIVER_CONTROLLER_PORT);
 
     fieldCentricDriveState = new FieldCentricDriveState(swerveDrive,
-    () -> (-MathUtils.deadband(driverController.getLeftY(), DriverConstants.JOYSTICK_DEADBAND)),
-     () -> (-MathUtils.deadband(driverController.getLeftX(), DriverConstants.JOYSTICK_DEADBAND)),
-     () -> (-MathUtils.deadband(driverController.getRightX(), DriverConstants.JOYSTICK_DEADBAND)));
+    () -> (-MathUtils.deadband(driverController.getLeftY(), DriverConstants.JOYSTICK_DEADBAND)* SwerveConstants.DRIVER_MAX_SPEED),
+     () -> (-MathUtils.deadband(driverController.getLeftX(), DriverConstants.JOYSTICK_DEADBAND)* SwerveConstants.DRIVER_MAX_SPEED),
+     () -> (-MathUtils.deadband(driverController.getRightX(), DriverConstants.JOYSTICK_DEADBAND)* SwerveConstants.DRIVER_MAX_SPEED));
 
      absoluteDriveState  = (new AbsoluteDriveState(swerveDrive, 
-     () -> (-MathUtils.deadband(driverController.getLeftY(), DriverConstants.JOYSTICK_DEADBAND)),
-     () -> (-MathUtils.deadband(driverController.getLeftX(), DriverConstants.JOYSTICK_DEADBAND)),
-     () -> (-MathUtils.deadband(driverController.getRightX(), DriverConstants.JOYSTICK_DEADBAND)),
-     () -> (-MathUtils.deadband(driverController.getRightY(), DriverConstants.JOYSTICK_DEADBAND))));
+     () -> (-MathUtils.deadband(driverController.getLeftY(), DriverConstants.JOYSTICK_DEADBAND)* SwerveConstants.DRIVER_MAX_SPEED),
+     () -> (-MathUtils.deadband(driverController.getLeftX(), DriverConstants.JOYSTICK_DEADBAND)* SwerveConstants.DRIVER_MAX_SPEED),
+     () -> (-MathUtils.deadband(driverController.getRightX(), DriverConstants.JOYSTICK_DEADBAND)* SwerveConstants.DRIVER_MAX_SPEED),
+     () -> (-MathUtils.deadband(driverController.getRightY(), DriverConstants.JOYSTICK_DEADBAND))* SwerveConstants.DRIVER_MAX_SPEED));
 
     configureBindings();
 
-    ArrayList<ShuffleboardTabBase> tabs = new ArrayList<>();
+   /*  ArrayList<ShuffleboardTabBase> tabs = new ArrayList<>();
                 // YOUR CODE HERE |  |  |
                 //               \/ \/ \/
                 tabs.add(new SwerveTab(swerveDrive));
                 tabs.add(new DriverStationTab(swerveDrive));
                 // STOP HERE OR DIE
                 ShuffleboardInfo shuffleboardInfo = ShuffleboardInfo.getInstance();
-                shuffleboardInfo.addTabs(tabs);
+                shuffleboardInfo.addTabs(tabs);*/
 
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog());
