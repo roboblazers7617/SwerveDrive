@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Subsystems.Swerve.SwerveDrive;
 import swervelib.SwerveController;
 import swervelib.math.SwerveMath;
@@ -25,6 +26,8 @@ public class AbsoluteDriveState extends CommandBase {
   /** Creates a new AbsoluteDriveState. */
   private final SwerveDrive swerveDrive;
   private final Supplier<Double> vX, vY, headingHorizontal, headingVertical;
+  private Trigger snapOut, snapIn, snapLeft, snapRight;
+  private double snapY, snapX;
   private ChassisSpeeds speeds;
   private Translation2d translation;
   /**
@@ -43,6 +46,28 @@ public class AbsoluteDriveState extends CommandBase {
     this.vY = vY;
     this.headingHorizontal = headingHorizontal;
     this.headingVertical = headingVertical;
+
+    snapOut = new Trigger(()->false);
+    snapIn = new Trigger(()->false);
+    snapLeft = new Trigger(()->false);
+    snapRight = new Trigger(()->false);
+  }
+
+  public AbsoluteDriveState(SwerveDrive swerveDrive, Supplier<Double> vX, Supplier<Double> vY, Supplier<Double> headingHorizontal, Supplier<Double> headingVertical, 
+  Trigger snapOut, Trigger snapIn, Trigger snapLeft, Trigger snapRight) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(swerveDrive); 
+    this.swerveDrive = swerveDrive;
+    this.vX = vX;
+    this.vY = vY;
+    this.headingHorizontal = headingHorizontal;
+    this.headingVertical = headingVertical;
+
+    this.snapOut = snapOut;
+    this.snapIn = snapIn;
+    this.snapLeft = snapLeft;
+    this.snapRight = snapRight;
+
   }
 
   // Called when the command is initially scheduled.
@@ -54,6 +79,7 @@ public class AbsoluteDriveState extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if(snapOut.getAsBoolean() == false && snapIn.getAsBoolean()==false && snapLeft.getAsBoolean()==false && snapRight.getAsBoolean()==false){
     speeds = swerveDrive.getTargetSpeeds(vX.get(),
     vY.get(),
     headingHorizontal.get(), headingVertical.get());
@@ -64,6 +90,36 @@ public class AbsoluteDriveState extends CommandBase {
     Constants.LOOP_TIME, Constants.ROBOT_MASS, List.of(SwerveConstants.DRIVEBASE), 
     swerveDrive.getSwerveDriveConfiguration());
     swerveDrive.drive(translation, speeds.omegaRadiansPerSecond, true, false);
+  }
+  else{
+    snapX = 0;
+    snapY = 0;
+    if(snapOut.getAsBoolean()){
+      snapY += 1;
+    }
+    if(snapIn.getAsBoolean()){
+      snapY -= 1;
+    }
+    if(snapLeft.getAsBoolean()){
+      snapX += 1;
+    }
+    if(snapRight.getAsBoolean()){
+      snapX -= 1;
+    }
+
+    speeds = swerveDrive.getTargetSpeeds(vX.get(),
+    vY.get(),
+    snapX, snapY);
+
+    translation = SwerveController.getTranslation2d(speeds);
+
+    translation = SwerveMath.limitVelocity(translation, swerveDrive.getFieldVelocity(), swerveDrive.getPose(), 
+    Constants.LOOP_TIME, Constants.ROBOT_MASS, List.of(SwerveConstants.DRIVEBASE), 
+    swerveDrive.getSwerveDriveConfiguration());
+    swerveDrive.drive(translation, speeds.omegaRadiansPerSecond, true, false);
+  }
+
+
     
   }
 

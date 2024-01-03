@@ -42,13 +42,21 @@ public class RobotContainer {
     fieldCentricDriveState = new FieldCentricDriveState(swerveDrive,
     () -> (-MathUtils.deadband(driverController.getLeftY(), DriverConstants.JOYSTICK_DEADBAND)),
      () -> (-MathUtils.deadband(driverController.getLeftX(), DriverConstants.JOYSTICK_DEADBAND)),
-     () -> (-MathUtils.deadband(driverController.getRightX(), DriverConstants.JOYSTICK_DEADBAND)));
+     () -> (-MathUtils.deadband(driverController.getRightX(), DriverConstants.JOYSTICK_DEADBAND)),
+     driverController.y(),
+     driverController.a(),
+     driverController.x(),
+     driverController.b());
 
      absoluteDriveState  = (new AbsoluteDriveState(swerveDrive, 
      () -> (-MathUtils.deadband(driverController.getLeftY(), DriverConstants.JOYSTICK_DEADBAND)),
      () -> (-MathUtils.deadband(driverController.getLeftX(), DriverConstants.JOYSTICK_DEADBAND)),
      () -> (-MathUtils.deadband(driverController.getRightX(), DriverConstants.JOYSTICK_DEADBAND)),
-     () -> (-MathUtils.deadband(driverController.getRightY(), DriverConstants.JOYSTICK_DEADBAND))));
+     () -> (-MathUtils.deadband(driverController.getRightY(), DriverConstants.JOYSTICK_DEADBAND)),
+     driverController.y(),
+     driverController.a(),
+     driverController.x(),
+     driverController.b()));
 
     configureBindings();
 
@@ -73,9 +81,9 @@ public class RobotContainer {
     swerveDrive.setDefaultCommand(fieldCentricDriveState);
 
 
-    driverController.a().toggleOnTrue(new LockWheelsState(swerveDrive));
+    driverController.povDown().toggleOnTrue(new LockWheelsState(swerveDrive));
 
-     driverController.x().onTrue(
+     driverController.povLeft().onTrue(
      Commands.either(
       Commands.parallel(Commands.runOnce(() -> swerveDrive.setDefaultCommand(absoluteDriveState))
       .andThen(new ScheduleCommand(absoluteDriveState)),
