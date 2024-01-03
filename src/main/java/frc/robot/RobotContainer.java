@@ -40,15 +40,15 @@ public class RobotContainer {
     driverController = new CommandXboxController(DriverConstants.DRIVER_CONTROLLER_PORT);
 
     fieldCentricDriveState = new FieldCentricDriveState(swerveDrive,
-    () -> (-MathUtils.deadband(driverController.getLeftY(), DriverConstants.JOYSTICK_DEADBAND)* SwerveConstants.DRIVER_MAX_SPEED),
-     () -> (-MathUtils.deadband(driverController.getLeftX(), DriverConstants.JOYSTICK_DEADBAND)* SwerveConstants.DRIVER_MAX_SPEED),
-     () -> (-MathUtils.deadband(driverController.getRightX(), DriverConstants.JOYSTICK_DEADBAND)* SwerveConstants.DRIVER_MAX_SPEED));
+    () -> (-MathUtils.deadband(driverController.getLeftY(), DriverConstants.JOYSTICK_DEADBAND)),
+     () -> (-MathUtils.deadband(driverController.getLeftX(), DriverConstants.JOYSTICK_DEADBAND)),
+     () -> (-MathUtils.deadband(driverController.getRightX(), DriverConstants.JOYSTICK_DEADBAND)));
 
      absoluteDriveState  = (new AbsoluteDriveState(swerveDrive, 
-     () -> (-MathUtils.deadband(driverController.getLeftY(), DriverConstants.JOYSTICK_DEADBAND)* SwerveConstants.DRIVER_MAX_SPEED),
-     () -> (-MathUtils.deadband(driverController.getLeftX(), DriverConstants.JOYSTICK_DEADBAND)* SwerveConstants.DRIVER_MAX_SPEED),
-     () -> (-MathUtils.deadband(driverController.getRightX(), DriverConstants.JOYSTICK_DEADBAND)* SwerveConstants.DRIVER_MAX_SPEED),
-     () -> (-MathUtils.deadband(driverController.getRightY(), DriverConstants.JOYSTICK_DEADBAND))* SwerveConstants.DRIVER_MAX_SPEED));
+     () -> (-MathUtils.deadband(driverController.getLeftY(), DriverConstants.JOYSTICK_DEADBAND)),
+     () -> (-MathUtils.deadband(driverController.getLeftX(), DriverConstants.JOYSTICK_DEADBAND)),
+     () -> (-MathUtils.deadband(driverController.getRightX(), DriverConstants.JOYSTICK_DEADBAND)),
+     () -> (-MathUtils.deadband(driverController.getRightY(), DriverConstants.JOYSTICK_DEADBAND))));
 
     configureBindings();
 

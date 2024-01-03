@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Auton;
+import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.SwerveConstants;
 import swervelib.SwerveController;
 import swervelib.parser.SwerveDriveConfiguration;
@@ -41,6 +42,7 @@ public class SwerveDrive extends SubsystemBase {
   /** Creates a new SwerveDrive. */
   private swervelib.SwerveDrive drivetrain;
   public SwerveAutoBuilder autoBuilder = null;
+  private double driverScalingFactor = DriverConstants.DEFUALT_DRIVER_SCALING_FACTOR;
   //private final StringLogEntry logger;
 
   public SwerveDrive() {
@@ -52,6 +54,7 @@ public class SwerveDrive extends SubsystemBase {
     catch(Exception e){
       throw new RuntimeException(e);
     }
+    drivetrain.setHeadingCorrection(false);
 
   }
   //TODO: All variable declarations should be before the constructor
@@ -199,9 +202,9 @@ public class SwerveDrive extends SubsystemBase {
    */
   public ChassisSpeeds getTargetSpeeds(double xInput, double yInput, double headingX, double headingY)
   {
-    xInput = Math.pow(xInput, 3);
-    yInput = Math.pow(yInput, 3);
-    return drivetrain.swerveController.getTargetSpeeds(xInput, yInput, headingX, headingY, getHeading().getRadians());
+    xInput = processJoystickInput(xInput);
+    yInput = processJoystickInput(yInput);
+    return drivetrain.swerveController.getTargetSpeeds(xInput, yInput, headingX, headingY, getHeading().getRadians(), SwerveConstants.MAX_SPEED);
   }
 
   /**
@@ -210,17 +213,25 @@ public class SwerveDrive extends SubsystemBase {
    *
    * @param xInput   X joystick input for the robot to move in the X direction.
    * @param yInput   Y joystick input for the robot to move in the Y direction.
-   * @param thetaInput X joystick which controls the rate of turning of the robot.
+   * @param deltaThetaInput X joystick which controls the rate of turning of the robot.
    * @return {@link ChassisSpeeds} which can be sent to the Swerve Drive.
    */
   //      based on the current heading and what the desired heading is?
-  public ChassisSpeeds getTargetSpeeds(double xInput, double yInput, double thetaInput)
+  public ChassisSpeeds getTargetSpeeds(double xInput, double yInput, double deltaThetaInput)
   {
-    xInput = Math.pow(xInput, 3) * SwerveConstants.MAX_SPEED;
-    yInput = Math.pow(yInput, 3) * SwerveConstants.MAX_SPEED;
-    thetaInput = Math.pow(thetaInput, 3) * drivetrain.swerveController.config.maxAngularVelocity;
+    xInput = processJoystickInput(xInput)*SwerveConstants.MAX_SPEED;
+    yInput = processJoystickInput(yInput)*SwerveConstants.MAX_SPEED;
+    deltaThetaInput = processJoystickInput(deltaThetaInput)*drivetrain.swerveController.config.maxAngularVelocity;
 
-    return drivetrain.swerveController.getRawTargetSpeeds(xInput, yInput, thetaInput);
+    return drivetrain.swerveController.getRawTargetSpeeds(xInput, yInput, deltaThetaInput);
+  }
+
+  private double processJoystickInput(double input){
+    return Math.pow(input, 3)*driverScalingFactor;
+  }
+
+  public void setDriverScalingFactor(double factor){
+    driverScalingFactor = factor;
   }
 
     /**
@@ -270,6 +281,7 @@ public class SwerveDrive extends SubsystemBase {
   {
     drivetrain.lockPose();
   }
+
 
   /**
    * Gets the current pitch angle of the robot, as reported by the imu.

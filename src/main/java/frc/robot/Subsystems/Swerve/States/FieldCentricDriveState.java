@@ -61,7 +61,7 @@ public class FieldCentricDriveState extends CommandBase {
     Constants.LOOP_TIME, Constants.ROBOT_MASS, List.of(SwerveConstants.DRIVEBASE), 
     swerveDrive.getSwerveDriveConfiguration());
 
-    swerveDrive.drive(translation, speeds.omegaRadiansPerSecond, true, false, false);
+    swerveDrive.drive(translation, speeds.omegaRadiansPerSecond, true, false);
   }
 
   // Called once the command ends or is interrupted.
