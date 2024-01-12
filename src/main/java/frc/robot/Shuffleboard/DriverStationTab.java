@@ -46,6 +46,6 @@ public class DriverStationTab extends ShuffleboardTabBase {
 
     @Override
     public void update() {
-        logger.append(questionnaire.getOutput());
+        // logger.append(questionnaire.getOutput());
     }
 }

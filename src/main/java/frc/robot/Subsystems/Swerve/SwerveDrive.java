@@ -107,7 +107,13 @@ public class SwerveDrive extends SubsystemBase {
     drivetrain.setHeadingCorrection(headingCorrection);
     drivetrain.drive(translation, rotation, fieldRelative, isOpenLoop);
     drivetrain.setHeadingCorrection(false);
-    //logger.append("Translation: " + translation.toString() + ". Rotation: " + rotation + ". Field Relative: " + fieldRelative + ". Heading Correction: " + headingCorrection);
+    // if(translation.toString() == null){
+    //   logger.append("translation is null");
+    // }
+    // else{
+    //   logger.append("Translation: " + translation.toString() + ". Rotation: " + rotation + ". Field Relative: " + fieldRelative + ". Heading Correction: " + headingCorrection);
+    // }
+    
   }
 
   /**
